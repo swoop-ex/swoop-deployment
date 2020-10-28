@@ -12,7 +12,7 @@ The deployment consists of two separate sections - one for smart contracts and o
 ## Installation
 
 ```
-git clone https://github.com/harmony-one/swoop-deployment.git && cd swoop-deployment
+git clone https://github.com/swoop-ex/swoop-deployment.git && cd swoop-deployment
 yarn install
 ```
 
@@ -110,16 +110,16 @@ The periphery step of the deployment process will deploy the `UniswapV2Router02`
 
 The Router will route trades as well as interfacing with the `UniswapV2Factory` contract to create new trading pairs.
 
-Before deploying the `UniswapV2Router02` contract you have to make sure that [the init code hash in the `UniswapV2Library.sol` contract in swoop-periphery](https://github.com/harmony-one/swoop-periphery/blob/master/contracts/libraries/UniswapV2Library.sol) matches the code hash outputted by the core deployment step.
+Before deploying the `UniswapV2Router02` contract you have to make sure that [the init code hash in the `UniswapV2Library.sol` contract in swoop-periphery](https://github.com/swoop-ex/swoop-periphery/blob/master/contracts/libraries/UniswapV2Library.sol) matches the code hash outputted by the core deployment step.
 
 The output from that command includes a line similar to the following:
 ```
 Init code hash for UniswapV2Pair is: 0x87356c32b1d11f0ecc268fbd499639821bf3bcbd0547a703a3437ff4673abb84
 ```
 
-Take that code hash and compare with the code hash in the [`UniswapV2Library.sol` contract](https://github.com/harmony-one/swoop-periphery/blob/master/contracts/libraries/UniswapV2Library.sol) (removing the leading `0x` prefix). The hash is typically defined on line 25, but this might obviously change if the contract is modified.
+Take that code hash and compare with the code hash in the [`UniswapV2Library.sol` contract](https://github.com/swoop-ex/swoop-periphery/blob/master/contracts/libraries/UniswapV2Library.sol) (removing the leading `0x` prefix). The hash is typically defined on line 25, but this might obviously change if the contract is modified.
 
-If those hashes do not match - update the [`UniswapV2Library.sol` contract](https://github.com/harmony-one/swoop-periphery/blob/master/contracts/libraries/UniswapV2Library.sol) to use the proper hash, publish a new version to NPM and update the package.json file for this repo to use the new package. You can then proceed with the rest of the periphery deployment procedure.
+If those hashes do not match - update the [`UniswapV2Library.sol` contract](https://github.com/swoop-ex/swoop-periphery/blob/master/contracts/libraries/UniswapV2Library.sol) to use the proper hash, publish a new version to NPM and update the package.json file for this repo to use the new package. You can then proceed with the rest of the periphery deployment procedure.
 
 In order to deploy the `UniswapV2Router02` you need to have already deployed the `UniswapV2Factory` contract from the previous core step of this deployment process. You also need to have deployed (or have access to) a wONE (wETH) contract.
 
@@ -140,17 +140,17 @@ You have now deployed the relevant smart contracts required to run Uniswap/Swoop
 
 ## Libraries / SDK / Interface
 
-After the smart contracts have been deployed various contract addresses for Multicall, wONE, UniswapV2Factory and UniswapV2Router02 have to be updated in [swoop-sdk](https://github.com/harmony-one/swoop-sdk) and [swoop-interface](https://github.com/harmony-one/swoop-interface).
+After the smart contracts have been deployed various contract addresses for Multicall, wONE, UniswapV2Factory and UniswapV2Router02 have to be updated in [swoop-sdk](https://github.com/swoop-ex/swoop-sdk) and [swoop-interface](https://github.com/swoop-ex/swoop-interface).
 
-If you've changed the wONE (wETH) contract deployment or if you've re-deployed testing token contracts, you also have to change [swoop-default-token-list](https://github.com/harmony-one/swoop-default-token-list).
+If you've changed the wONE (wETH) contract deployment or if you've re-deployed testing token contracts, you also have to change [swoop-default-token-list](https://github.com/swoop-ex/swoop-default-token-list).
 
 ### Swoop SDK
 
-Repository: [https://github.com/harmony-one/swoop-sdk](https://github.com/harmony-one/swoop-sdk)
+Repository: [https://github.com/swoop-ex/swoop-sdk](https://github.com/swoop-ex/swoop-sdk)
 
-[Swoop SDK](https://github.com/harmony-one/swoop-sdk) is simply a fork of the original [Uniswap V2 SDK](https://github.com/Uniswap/uniswap-sdk).
+[Swoop SDK](https://github.com/swoop-ex/swoop-sdk) is simply a fork of the original [Uniswap V2 SDK](https://github.com/Uniswap/uniswap-sdk).
 
-The important parts that need to be changed in the SDK are the `FACTORY_ADDRESS` and `INIT_CODE_HASH` in [`src/constants.ts`](https://github.com/harmony-one/swoop-sdk/blob/master/src/constants.ts) and WONE contract addresses at the bottom of [`src/entities/token.ts`](https://github.com/harmony-one/swoop-sdk/blob/master/src/entities/token.ts).
+The important parts that need to be changed in the SDK are the `FACTORY_ADDRESS` and `INIT_CODE_HASH` in [`src/constants.ts`](https://github.com/swoop-ex/swoop-sdk/blob/master/src/constants.ts) and WONE contract addresses at the bottom of [`src/entities/token.ts`](https://github.com/swoop-ex/swoop-sdk/blob/master/src/entities/token.ts).
 
 - `src/constants.ts`: `FACTORY_ADDRESS` needs to be changed to the address of the `UniswapV2Factory` contract you previously deployed.
 - `src/constants.ts`: `INIT_CODE_HASH` needs to be changed to the init code hash that was outputted during the core/factory deployment step. This time the value is entered with the leading `0x` prefix.
@@ -158,16 +158,16 @@ The important parts that need to be changed in the SDK are the `FACTORY_ADDRESS`
 
 Please note that `FACTORY_ADDRESS` and `INIT_CODE_HASH` can't be set for multiple platforms. This is how it was originally implemented in original Uniswap - but we could look into improving this and follow a model similar to how it's dealt with regarding the wONE contracts (which can be defined for multiple network environments).
 
-If you had to make any changes to the above mentioned files - commit the changes, push/merge with [Swoop SDK](https://github.com/harmony-one/swoop-sdk) and then publish a new package on NPM using `yarn publish`.
+If you had to make any changes to the above mentioned files - commit the changes, push/merge with [Swoop SDK](https://github.com/swoop-ex/swoop-sdk) and then publish a new package on NPM using `yarn publish`.
 
 ### Swoop Interface
 
-Repository: [https://github.com/harmony-one/swoop-interface](https://github.com/harmony-one/swoop-interface)
+Repository: [https://github.com/swoop-ex/swoop-interface](https://github.com/swoop-ex/swoop-interface)
 
 If you had to make any changes in the previous step, first make sure to use the latest `@swoop-exchange/sdk` version in `package.json`. Then update your packages using e.g. `yarn install`.
 
-If you've deployed a new router contract, update `ROUTER_ADDRESS` in [`src/constants/index.ts`](https://github.com/harmony-one/swoop-interface/blob/master/src/constants/index.ts) to the address of the contract you deployed. This setting is not network specific
+If you've deployed a new router contract, update `ROUTER_ADDRESS` in [`src/constants/index.ts`](https://github.com/swoop-ex/swoop-interface/blob/master/src/constants/index.ts) to the address of the contract you deployed. This setting is not network specific
 
-If you've deployed a new Multicall contract (shouldn't happen all too often), you need to also change `MULTICALL_NETWORKS` in [`src/constants/multicall/index.ts`](https://github.com/harmony-one/swoop-interface/blob/master/src/constants/multicall/index.ts) to use the new set of addresses.
+If you've deployed a new Multicall contract (shouldn't happen all too often), you need to also change `MULTICALL_NETWORKS` in [`src/constants/multicall/index.ts`](https://github.com/swoop-ex/swoop-interface/blob/master/src/constants/multicall/index.ts) to use the new set of addresses.
 
 If you've followed all the previous steps you should now have a correctly updated interface, go ahead and start it using `yarn start` and ensure that everything works as expected.
