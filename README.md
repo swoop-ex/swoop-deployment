@@ -20,7 +20,7 @@ yarn install
 
 The smart contract deployment of Swoop contains of two mandatory steps (core and periphery) and an optional step (external) depending on if you've already deployed required/supporting third party contracts or not.
 
-Run `NETWORK=testnet ./scripts/fastDeploy.sh` or `NETWORK=mainnet ./scripts/fastDeploy.sh` to deploy all contracts.
+Run `NETWORK=testnet ./scripts/fastDeploy.sh` or `NETWORK=mainnet ./scripts/fastDeploy.sh` to quickly deploy all contracts.
 
 Or use the following steps to deploy contracts step by step.
 ### Core
